@@ -1,6 +1,6 @@
 var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
 
-function displayBoard(height, width, labels) {  
+function displaayBoard(height, width, labels) {  
     for (var row=0; row<height; row=row+1) {
         var rowEl = $("<tr>");
         if (row === 0){
