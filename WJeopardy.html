@@ -3,7 +3,13 @@
 </head>
 
 <body>
-    {{> board}}
+    
+    {{> button}}
+    
+</body>
+
+
+<template name="main">
     <div id="mainDiv"> 
 		<img id="background" src="http://cs.wellesley.edu/~plee3/jeopardy/jeopardyboard.png">
 		<div id="display">
@@ -25,8 +31,11 @@
 			<tr><td>$0</td></tr>
 		</table>
 	</div>
-</body>
+</template>
 
 <template name="board">
-    
+</template>
+
+<template name="button">
+    <img id="button" src="http://cs.wellesley.edu/~hchao/cs249/Red_button.png">
 </template>

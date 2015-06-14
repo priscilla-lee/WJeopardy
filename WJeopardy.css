@@ -62,13 +62,13 @@ body {
     font-size: 125%;
     font-weight: bold;
     text-transform: uppercase;
-	text-shadow: 4px 4px 0px black;
+	text-shadow: 2px 2px 0px black;
 }
 
 td {
 	height: auto;
     background-color: rgb(0,0,171);
-    text-shadow: 4px 4px 0px black;
+    text-shadow: 2px 2px 0px black;
 }
 
 #board td {
@@ -87,7 +87,7 @@ td {
 	height: 98%;
 	background-color: rgb(0,0,171);
 	font-size: 150%;
-	text-shadow: 4px 4px 0px black;
+	text-shadow: 2px 2px 0px black;
 	color: white;
 	z-index: 100;
 	font-family:'Kameron', serif;
@@ -129,3 +129,7 @@ br#clear{
 	display: none;
 }
 
+#button {
+    position: relative;
+    top: 50%;
+}
