@@ -401,9 +401,9 @@ var general_round3 = {
 
 
 if (Meteor.isClient) {
-	var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
 
-	function displayBoard(height, width, labels) {  
+	displayBoard=function(height, width, labels) {  
+        console.log('hi');
 		for (var row=0; row<height; row=row+1) {
 			var rowEl = $("<tr>");
 			if (row === 0){
@@ -424,8 +424,10 @@ if (Meteor.isClient) {
 		}   
 	}
 
-
-	displayBoard(6, categories.length, categories);
+Template.board.rendered=function(){
+        var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
+        displayBoard(6, categories.length, categories);
+    
 
 	$("#board td").click(function(){
 		var ID = $(this).attr("id");
@@ -435,19 +437,15 @@ if (Meteor.isClient) {
 		//$("#overlay, #infobox").removeClass("hidden");
 		$("#infobox").removeClass("hidden");
 		$("#infobox #question").html(qa['q']);
-		$("#infobox #answer").html(qa['a']);
 		$(this).addClass("completed");
 	});
 
 	  $("#close").click(function(){
 		$("#overlay, #infobox").addClass("hidden");
-		$("#answer").hide();
 	  });
 
-	$("#show").click(function(){
-	  $("#infobox #answer").show();
-	});
-
+	
+}
 }
 
 if (Meteor.isServer) {	

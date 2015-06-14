@@ -3,6 +3,7 @@
 </head>
 
 <body>
+    {{> board}}
     <div id="mainDiv"> 
 		<img id="background" src="http://cs.wellesley.edu/~plee3/jeopardy/jeopardyboard.png">
 		<div id="display">
@@ -11,8 +12,6 @@
 				<p id="close">X</p>
 				<br id="clear">
 				<p id="question"></p>
-				<h3 id="show">Show Answer</h3>
-				<p id="answer" class="hidden"></p>
 			</div>
 		</div>
 	</div>
@@ -28,7 +27,6 @@
 	</div>
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="board">
+    
 </template>
