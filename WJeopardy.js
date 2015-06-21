@@ -1,4 +1,84 @@
 Questions = new Mongo.Collection("questions");
+Scores = new Mongo.Collection("scores");
+
+if (Scores.find().count() == 0) {
+	Scores.insert({player: "p1", score: 0});
+	Scores.insert({player: "p2", score: 0});
+	Scores.insert({player: "p3", score: 0});
+}
+
+if (Meteor.isClient) {
+
+	displayBoard=function(height, width, labels) {  
+        console.log('hi');
+		for (var row=0; row<height; row=row+1) {
+			var rowEl = $("<tr>");
+			if (row === 0){
+				for (var idx in labels){
+					$("<th>").attr({class: 'header'})
+							 .text(labels[idx])
+							 .appendTo(rowEl); 
+				}
+			} else {
+				for (var col=0; col<width; col=col+1) {
+					$("<td>").attr({class: labels[col], 
+									id: labels[col]+"_"+row})
+							 .text("$"+row*100)
+							 .appendTo(rowEl);          
+				}
+			}
+			rowEl.appendTo("#board");    
+		}   
+	}
+
+	Template.body.helpers({
+		prisOrElla: function() {
+			if (Meteor.user()) {
+				var pris = (Meteor.user().emails[0].address == "plee3@wellesley.edu");
+				var ella = (Meteor.user().emails[0].address == "hchao@wellesley.edu");
+				return ella || pris;
+			}
+		}
+		
+	})
+		
+		
+	Template.board.rendered=function(){
+			var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
+			displayBoard(6, categories.length, categories);
+		
+
+		$("#board td").click(function(){
+			var ID = $(this).attr("id");
+			var category = ID.split("_")[0];
+			var itemNr = ID.split("_")[1];
+			var qa = wellesley_round1[category][itemNr];
+			//$("#overlay, #infobox").removeClass("hidden");
+			$("#infobox").removeClass("hidden");
+			$("#infobox #question").html(qa['q']);
+			$(this).addClass("completed");
+		});
+
+		  $("#close").click(function(){
+			$("#overlay, #infobox").addClass("hidden");
+		  });
+
+	}
+}
+
+if (Meteor.isServer) {
+	Meteor.methods({
+		addScore: function(plyr, pts) {
+			var player = Scores.findOne({player: plyr});
+			Scores.update(player._id, {$inc: {score: pts}});
+		}
+	});
+}
+
+
+
+
+/**QUESTIONS**/
 
 var wellesley_round1 = {
     "History":{
@@ -399,65 +479,3 @@ var general_round3 = {
 	}
 };
 
-
-if (Meteor.isClient) {
-
-	displayBoard=function(height, width, labels) {  
-        console.log('hi');
-		for (var row=0; row<height; row=row+1) {
-			var rowEl = $("<tr>");
-			if (row === 0){
-				for (var idx in labels){
-					$("<th>").attr({class: 'header'})
-							 .text(labels[idx])
-							 .appendTo(rowEl); 
-				}
-			} else {
-				for (var col=0; col<width; col=col+1) {
-					$("<td>").attr({class: labels[col], 
-									id: labels[col]+"_"+row})
-							 .text("$"+row*100)
-							 .appendTo(rowEl);          
-				}
-			}
-			rowEl.appendTo("#board");    
-		}   
-	}
-
-Template.body.helpers({
-	prisOrElla: function() {
-		if (Meteor.user()) {
-			var pris = (Meteor.user().emails[0].address == "plee3@wellesley.edu");
-			var ella = (Meteor.user().emails[0].address == "hchao@wellesley.edu");
-			return ella || pris;
-		}
-	}
-	
-})
-	
-	
-Template.board.rendered=function(){
-        var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
-        displayBoard(6, categories.length, categories);
-    
-
-	$("#board td").click(function(){
-		var ID = $(this).attr("id");
-		var category = ID.split("_")[0];
-		var itemNr = ID.split("_")[1];
-		var qa = wellesley_round1[category][itemNr];
-		//$("#overlay, #infobox").removeClass("hidden");
-		$("#infobox").removeClass("hidden");
-		$("#infobox #question").html(qa['q']);
-		$(this).addClass("completed");
-	});
-
-	  $("#close").click(function(){
-		$("#overlay, #infobox").addClass("hidden");
-	  });
-
-}
-}
-
-if (Meteor.isServer) {	
-}
