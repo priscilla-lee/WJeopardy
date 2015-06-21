@@ -1,4 +1,5 @@
 Questions = new Mongo.Collection("questions");
+Times=new Mongo.Collection("times");
 
 var wellesley_round1 = {
     "History":{
@@ -457,7 +458,34 @@ Template.board.rendered=function(){
 	  });
 
 }
+Template.button.events({
+    "click #button": function(){
+        if (Times.find({id: Meteor.user()._id}).count()==0){
+            Times.insert({
+                player:Meteor.user().emails[0].address,
+                userId:Meteor.user()._id,
+                time:new Date().getTime()
+        })
+        }
 }
+})
+
+Template.button.helpers({
+    compare:function(){
+        for(var i in Times.find().fetch()){
+            var player;
+            var time=0;
+            if (Times.find().fetch()[i].time>time){
+                player=Times.find().fetch()[i].player;
+                time=Times.find().fetch()[i].time
+            }
+        }
+        console.log(player);
+    }
+})
+}   
+    
+    
 
 if (Meteor.isServer) {	
 }
