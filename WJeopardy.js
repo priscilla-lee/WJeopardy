@@ -427,7 +427,9 @@ if (Meteor.isClient) {
 Template.body.helpers({
 	prisOrElla: function() {
 		if (Meteor.user()) {
-			return (Meteor.user().emails[0].address == "plee3@wellesley.edu");
+			var pris = (Meteor.user().emails[0].address == "plee3@wellesley.edu");
+			var ella = (Meteor.user().emails[0].address == "hchao@wellesley.edu");
+			return ella || pris;
 		}
 	}
 	
