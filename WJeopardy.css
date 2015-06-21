@@ -1,7 +1,12 @@
 /* CSS declarations go here */
 #whitetext {
+	color: rgba(0,0,0,0);
+	z-index: 100;
+	position: relative;
+}
+
+#whitetext:hover {
 	color: white;
-	z-index: 100 !important;
 }
 
 html, body, #mainDiv, #board, #sideDiv, #scores {
@@ -17,6 +22,8 @@ body {
 #background {
 	width: 100%;
 	height: 100%;
+	position: relative;
+	z-index: 1;
 }
 
 #mainDiv {
