@@ -444,7 +444,6 @@ Template.board.rendered=function(){
 		$("#overlay, #infobox").addClass("hidden");
 	  });
 
-	
 }
 }
 

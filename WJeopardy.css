@@ -1,4 +1,8 @@
 /* CSS declarations go here */
+#whitetext {
+	color: white;
+}
+
 html, body, #mainDiv, #board, #sideDiv, #scores {
 	height: 100%;
 	margin: 0px;
