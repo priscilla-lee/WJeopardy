@@ -1,5 +1,6 @@
 Questions = new Mongo.Collection("questions");
 Scores = new Mongo.Collection("scores");
+Times=new Mongo.Collection("times");
 
 if (Scores.find().count() == 0) {
 	Scores.insert({player: "p1", score: 0});
@@ -45,8 +46,7 @@ if (Meteor.isClient) {
 		
 	Template.board.rendered=function(){
 			var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
-			displayBoard(6, categories.length, categories);
-		
+			displayBoard(6, categories.length, categories);	
 
 		$("#board td").click(function(){
 			var ID = $(this).attr("id");
@@ -64,8 +64,35 @@ if (Meteor.isClient) {
 		  });
 
 	}
-}
 
+	Template.button.events({
+		"click #button": function(){
+			if (Times.find({id: Meteor.user()._id}).count()==0){
+				Times.insert({
+					player:Meteor.user().emails[0].address,
+					userId:Meteor.user()._id,
+					time:new Date().getTime()
+			})
+			}
+		}
+	})
+
+	Template.button.helpers({
+		compare:function(){
+			for(var i in Times.find().fetch()){
+				var player;
+				var time=0;
+				if (Times.find().fetch()[i].time>time){
+					player=Times.find().fetch()[i].player;
+					time=Times.find().fetch()[i].time
+				}
+			}
+			console.log(player);
+		}
+	})
+}   
+    
+    
 if (Meteor.isServer) {
 	Meteor.methods({
 		addScore: function(plyr, pts) {
@@ -74,9 +101,6 @@ if (Meteor.isServer) {
 		}
 	});
 }
-
-
-
 
 /**QUESTIONS**/
 
@@ -478,4 +502,3 @@ var general_round3 = {
               'a': "What is Venice?" }
 	}
 };
-
