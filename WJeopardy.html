@@ -3,32 +3,13 @@
 </head>
 
 <body>
-	{{#if currentUser}} 
-		<div id="mainDiv"> 
-		<img id="background" src="http://cs.wellesley.edu/~plee3/jeopardy/jeopardyboard.png">
-		<div id="display">
-			<table id="board"></table>
-			<div id="infobox" class="hidden">
-				<p id="close">X</p>
-				<br id="clear">
-				<p id="question"></p>
-			</div>
-		</div>
-	</div>
-	<div id="sideDiv">
-		<table id="scores">
-			<tr><td>Player 1</td></tr>
-			<tr><td>$0</td></tr>
-			<tr><td>Player 2</td></tr>
-			<tr><td>$0</td></tr>
-			<tr><td>Player 3</td></tr>
-			<tr><td>$0</td></tr>
-		</table>
-	</div>
-	
-	
-	
-	{{else}} <div id="whitetext">{{> loginButtons}}</div>
+	<div id="whitetext">{{> loginButtons}}</div>
+	{{#if currentUser}}	
+		{{#if prisOrElla}}
+			{{> board}}		
+		{{else}}
+			{{> button}}	
+		{{/if}}	
 	{{/if}}
 </body>
 
@@ -54,4 +35,8 @@
 			<tr><td>$0</td></tr>
 		</table>
 	</div>
+</template>
+
+<template name="button">
+    <img id="button" src="http://cs.wellesley.edu/~hchao/cs249/Red_button.png">
 </template>

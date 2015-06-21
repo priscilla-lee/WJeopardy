@@ -424,6 +424,16 @@ if (Meteor.isClient) {
 		}   
 	}
 
+Template.body.helpers({
+	prisOrElla: function() {
+		if (Meteor.user()) {
+			return (Meteor.user().emails[0].address == "plee3@wellesley.edu");
+		}
+	}
+	
+})
+	
+	
 Template.board.rendered=function(){
         var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
         displayBoard(6, categories.length, categories);
