@@ -73,7 +73,7 @@ if (Meteor.isClient) {
 
 	Template.button.events({
 		"click #button": function(){
-			if (Times.find({id: Meteor.user()._id}).count()==0){
+			if (Times.find({id: Meteor.user()._userId}).count()==0){
 				Times.insert({
 					player:Meteor.user().emails[0].address,
 					userId:Meteor.user()._id,
@@ -90,7 +90,7 @@ if (Meteor.isClient) {
 				var time=0;
 				if (Times.find().fetch()[i].time>time){
 					player=Times.find().fetch()[i].player;
-					time=Times.find().fetch()[i].time
+					time=Times.find().fetch()[i].time;
 				}
 			}
 			console.log(player);
