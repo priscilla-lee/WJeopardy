@@ -2,13 +2,13 @@ Questions = new Mongo.Collection("questions");
 Scores = new Mongo.Collection("scores");
 Times=new Mongo.Collection("times");
 
-if (Scores.find().count() == 0) {
-	Scores.insert({player: "p1", score: 0});
-	Scores.insert({player: "p2", score: 0});
-	Scores.insert({player: "p3", score: 0});
-}
-
 if (Meteor.isClient) {
+	
+	if (Scores.find().count() == 0) {
+		Scores.insert({player: "p1", score: 0});
+		Scores.insert({player: "p2", score: 0});
+		Scores.insert({player: "p3", score: 0});
+	}
 
 	displayBoard=function(height, width, labels) {  
         console.log('hi');
@@ -41,6 +41,12 @@ if (Meteor.isClient) {
 			}
 		}
 		
+	})
+	
+	Template.board.helpers({
+		score1: function() {return Scores.findOne({player: "p1"}).score;},
+		score2: function() {return Scores.findOne({player: "p2"}).score;},
+		score3: function() {return Scores.findOne({player: "p3"}).score;},
 	})
 		
 		
@@ -95,11 +101,16 @@ if (Meteor.isClient) {
     
 if (Meteor.isServer) {
 	Meteor.methods({
-		addScore: function(plyr, pts) {
+		updateScore: function(plyr, pts) {
 			var player = Scores.findOne({player: plyr});
 			Scores.update(player._id, {$inc: {score: pts}});
+		},
+		resetTime: function() {
+			Times.remove({"_id": Times.findOne()._id});
 		}
 	});
+	
+	
 }
 
 /**QUESTIONS**/
