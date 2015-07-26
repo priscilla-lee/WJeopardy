@@ -88,7 +88,7 @@ if (Meteor.isClient) {
 			for(var i in Times.find().fetch()){
 				var player;
 				var time=0;
-				if (Times.find().fetch()[i].time>time){
+				if (Times.find().fetch()[i].time<time){
 					player=Times.find().fetch()[i].player;
 					time=Times.find().fetch()[i].time;
 				}
