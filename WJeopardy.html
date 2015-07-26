@@ -27,11 +27,11 @@
 	</div>
 	<div id="sideDiv">
 		<table id="scores">
-			<tr><td>Player 1</td></tr>
+			<tr><td class="{{#if p1fastest}}highlight{{/if}}">Player 1</td></tr>
 			<tr><td>${{score1}}</td></tr>
-			<tr><td>Player 2</td></tr>
+			<tr><td class="{{#if p2fastest}}highlight{{/if}}">Player 2</td></tr>
 			<tr><td>${{score2}}</td></tr>
-			<tr><td>Player 3</td></tr>
+			<tr><td class="{{#if p3fastest}}highlight{{/if}}">Player 3</td></tr>
 			<tr><td>${{score3}}</td></tr>
 		</table>
 	</div>
