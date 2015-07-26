@@ -1,6 +1,6 @@
 Questions = new Mongo.Collection("questions");
 Scores = new Mongo.Collection("scores");
-Times=new Mongo.Collection("times");
+Times = new Mongo.Collection("times");
 
 if (Meteor.isClient) {
 	
@@ -17,13 +17,6 @@ if (Meteor.isClient) {
 			return player;
 	}
 	
-	
-	if (Scores.find().count() == 0) {
-		Scores.insert({player: "p1", score: 0});
-		Scores.insert({player: "p2", score: 0});
-		Scores.insert({player: "p3", score: 0});
-	}
-
 	displayBoard=function(height, width, labels) {  
         console.log('hi');
 		for (var row=0; row<height; row=row+1) {
@@ -58,12 +51,27 @@ if (Meteor.isClient) {
 	})
 	
 	Template.board.helpers({
-		score1: function() {return Scores.findOne({player: "p1"}).score;},
-		score2: function() {return Scores.findOne({player: "p2"}).score;},
-		score3: function() {return Scores.findOne({player: "p3"}).score;},
+		score1: function() {		
+			var score = Scores.findOne({player: "p1"}).score;
+			if (score < 0) return "-$" + -1*score;
+			else return "$" + score;
+		},
+		score2: function() {
+			var score = Scores.findOne({player: "p2"}).score;
+			if (score < 0) return "-$" + -1*score;
+			else return "$" + score;
+		},
+		score3: function() {
+			var score = Scores.findOne({player: "p3"}).score;
+			if (score < 0) return "-$" + -1*score;
+			else return "$" + score;
+		},
 		p1fastest: function() { return (fastest() == "player1@wellesley.edu");}, 
-		p2fastest: function() { return (fastest() == "player2@wellesley.edu");, 
-		p3fastest: function() { return (fastest() == "player3@wellesley.edu");}
+		p2fastest: function() { return (fastest() == "player2@wellesley.edu");}, 
+		p3fastest: function() { return (fastest() == "player3@wellesley.edu");},
+		negative1: function() {return (Scores.findOne({player: "p1"}).score < 0);},
+		negative2: function() {return (Scores.findOne({player: "p2"}).score < 0);},
+		negative3: function() {return (Scores.findOne({player: "p3"}).score < 0);},
 	})
 		
 		
@@ -118,6 +126,17 @@ if (Meteor.isClient) {
     
     
 if (Meteor.isServer) {
+	
+	if (Scores.find().count() == 0) {
+		console.log("inserting new scores");
+		console.log(Scores.find().count());
+		console.log(Scores);
+		console.log(Scores.find());
+		Scores.insert({player: "p1", score: 0});
+		Scores.insert({player: "p2", score: 0});
+		Scores.insert({player: "p3", score: 0});
+	}
+	
 	Meteor.methods({
 		updateScore: function(plyr, pts) {
 			var player = Scores.findOne({player: plyr});

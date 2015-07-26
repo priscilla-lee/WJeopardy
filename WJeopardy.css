@@ -1,6 +1,12 @@
 /* CSS declarations go here */
 .highlight {
 	background-color: white;
+	color: black !important;
+	text-shadow: 0px 0px 0px black !important;
+}
+
+.negative {
+	color: red !important;
 }
 
 #whitetext {
