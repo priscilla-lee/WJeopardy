@@ -4,6 +4,20 @@ Times=new Mongo.Collection("times");
 
 if (Meteor.isClient) {
 	
+	function fastest() {
+			for(var i in Times.find().fetch()){
+				var player;
+				var time = 10000000000000000000000000000000000;
+				if (Times.find().fetch()[i].time<time){
+					player=Times.find().fetch()[i].player;
+					time=Times.find().fetch()[i].time;
+				}
+			}
+			console.log(player);
+			return player;
+	}
+	
+	
 	if (Scores.find().count() == 0) {
 		Scores.insert({player: "p1", score: 0});
 		Scores.insert({player: "p2", score: 0});
@@ -47,42 +61,9 @@ if (Meteor.isClient) {
 		score1: function() {return Scores.findOne({player: "p1"}).score;},
 		score2: function() {return Scores.findOne({player: "p2"}).score;},
 		score3: function() {return Scores.findOne({player: "p3"}).score;},
-		p1fastest: function() {
-			var boo;
-			Meteor.call("fastest", function(error, result) {
-				if (result == "player1@wellesley.edu") {
-					console.log("highlighting p1");
-					boo = true;
-				} else {
-					boo = false;
-				}
-			});
-			return boo;
-		}, 
-		p2fastest: function() {
-			var boo;
-			Meteor.call("fastest", function(error, result) {
-				if (result == "player2@wellesley.edu") {
-					console.log("highlighting p1");
-					boo = true;
-				} else {
-					boo = false;
-				}
-			});
-			return boo;
-		}, 
-		p3fastest: function() {
-			var boo;
-			Meteor.call("fastest", function(error, result) {
-				if (result == "player3@wellesley.edu") {
-					console.log("highlighting p1");
-					boo = true;
-				} else {
-					boo = false;
-				}
-			});
-			return boo;
-		}
+		p1fastest: function() { return (fastest() == "player1@wellesley.edu");}, 
+		p2fastest: function() { return (fastest() == "player2@wellesley.edu");, 
+		p3fastest: function() { return (fastest() == "player3@wellesley.edu");}
 	})
 		
 		
@@ -144,32 +125,7 @@ if (Meteor.isServer) {
 		},
 		resetTime: function() {
 			Times.remove({"_id": Times.findOne()._id});
-		}, fastest:function() {
-			for(var i in Times.find().fetch()){
-				var player;
-				var time = 10000000000000000000000000000000000;
-				if (Times.find().fetch()[i].time<time){
-					player=Times.find().fetch()[i].player;
-					time=Times.find().fetch()[i].time;
-				}
-			}
-			console.log(player);
-			return player;
 		}
-	// })
-			// var fastest = Times.findOne();
-			// var player = fastest.player;
-			// var time= fastest.time;
-			// for(var i in Times.find().fetch()){
-				// if (Times.find().fetch()[i].time<fastest.time){
-					// fastest = Times.find().fetch()[i];
-					// player = fastest.player;
-					// time = fastest.time;
-				// }
-			// }
-			// console.log(fastest.player);
-			// return fastest.player;
-		// }
 	});
 	
 	
