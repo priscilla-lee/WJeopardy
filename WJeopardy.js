@@ -98,7 +98,7 @@ if (Meteor.isClient) {
 
 	Template.button.events({
 		"click #button": function(){
-			if (Times.find({id: Meteor.user()._userId}).count()==0){
+			if (Times.find().count()==0){
 				Times.insert({
 					player:Meteor.user().emails[0].address,
 					userId:Meteor.user()._id,
