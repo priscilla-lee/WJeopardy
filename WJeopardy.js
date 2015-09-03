@@ -5,9 +5,9 @@ Times = new Mongo.Collection("times");
 if (Meteor.isClient) {
 	
 	function fastest() {
+            var time = 10000000000000000000000000000000000;
+            var player;
 			for(var i in Times.find().fetch()){
-				var player;
-				var time = 10000000000000000000000000000000000;
 				if (Times.find().fetch()[i].time<time){
 					player=Times.find().fetch()[i].player;
 					time=Times.find().fetch()[i].time;
