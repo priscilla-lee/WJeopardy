@@ -13,12 +13,23 @@ if (Meteor.isClient) {
 					time=Times.find().fetch()[i].time;
 				}
 			}
-			console.log(player);
+			//console.log(player);
 			return player;
 	}
+
+	pts = function(plyr, pts) { //updatepts
+		var player = Scores.findOne({player: plyr});
+		Scores.update(player._id, {$inc: {score: pts}});
+	}
+
+	reset= function() { //reset time
+		Times.remove({"_id": Times.findOne()._id});
+	}
 	
-	displayBoard=function(height, width, labels) {  
-        console.log('hi');
+	displayBoard=function(height, width, labels) { 
+		var table = document.getElementById("board");
+		table.innerHTML = '';
+
 		for (var row=0; row<height; row=row+1) {
 			var rowEl = $("<tr>");
 			if (row === 0){
@@ -37,6 +48,32 @@ if (Meteor.isClient) {
 			}
 			rowEl.appendTo("#board");    
 		}   
+	}
+
+	create = function(boardName) { //create board
+		var categories = []
+
+		for (var key in boardName) {
+	        categories.push(key);
+		}
+
+		displayBoard(6, categories.length, categories);	
+
+		$("#board td").click(function(){
+			var ID = $(this).attr("id");
+			var category = ID.split("_")[0];
+			var itemNr = ID.split("_")[1];
+			var qa = boardName[category][itemNr];
+			//$("#overlay, #infobox").removeClass("hidden");
+			$("#infobox").removeClass("hidden");
+			$("#infobox #question").html(qa['q']);
+			$(this).addClass("completed");
+		});
+
+		  $("#close").click(function(){
+			$("#overlay, #infobox").addClass("hidden");
+		  });
+
 	}
 
 	Template.body.helpers({
@@ -75,26 +112,26 @@ if (Meteor.isClient) {
 	})
 		
 		
-	Template.board.rendered=function(){
-			var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
-			displayBoard(6, categories.length, categories);	
+	// Template.board.rendered=function(){
+	// 	// 	var categories = ["History", "Women’s Colleges", "Campus", "Alumnae", "Faculty",  "Student Life"];
+	// 	// 	displayBoard(6, categories.length, categories);	
 
-		$("#board td").click(function(){
-			var ID = $(this).attr("id");
-			var category = ID.split("_")[0];
-			var itemNr = ID.split("_")[1];
-			var qa = wellesley_round1[category][itemNr];
-			//$("#overlay, #infobox").removeClass("hidden");
-			$("#infobox").removeClass("hidden");
-			$("#infobox #question").html(qa['q']);
-			$(this).addClass("completed");
-		});
+	// 	// $("#board td").click(function(){
+	// 	// 	var ID = $(this).attr("id");
+	// 	// 	var category = ID.split("_")[0];
+	// 	// 	var itemNr = ID.split("_")[1];
+	// 	// 	var qa = wellesley_round1[category][itemNr];
+	// 	// 	//$("#overlay, #infobox").removeClass("hidden");
+	// 	// 	$("#infobox").removeClass("hidden");
+	// 	// 	$("#infobox #question").html(qa['q']);
+	// 	// 	$(this).addClass("completed");
+	// 	// });
 
-		  $("#close").click(function(){
-			$("#overlay, #infobox").addClass("hidden");
-		  });
+	// 	//   $("#close").click(function(){
+	// 	// 	$("#overlay, #infobox").addClass("hidden");
+	// 	//   });
 
-	}
+	// }
 
 	Template.button.events({
 		"click #button": function(){
@@ -137,22 +174,22 @@ if (Meteor.isServer) {
 		Scores.insert({player: "p3", score: 0});
 	}
 	
-	Meteor.methods({
-		updateScore: function(plyr, pts) {
-			var player = Scores.findOne({player: plyr});
-			Scores.update(player._id, {$inc: {score: pts}});
-		},
-		resetTime: function() {
-			Times.remove({"_id": Times.findOne()._id});
-		}
-	});
+	// Meteor.methods({
+	// 	updateScore: function(plyr, pts) {
+	// 		var player = Scores.findOne({player: plyr});
+	// 		Scores.update(player._id, {$inc: {score: pts}});
+	// 	},
+	// 	resetTime: function() {
+	// 		Times.remove({"_id": Times.findOne()._id});
+	// 	}
+	// });
 	
 	
 }
 
 /**QUESTIONS**/
 
-var wellesley_round1 = {
+wellesley_round1 = {
     "History":{
         "1":{"q": "Wellesley College was officially founded in this year.",
              "a": "What is 1870?"},
@@ -231,7 +268,7 @@ var wellesley_round1 = {
     }
 };
 
-var wellesley_round2 = { 
+wellesley_round2 = { 
 	'Town of Wellesley': {
 		'1': {	'q': "This citrus-named restaurant (thankfully) delivers to Wellesley college.",
 				'a': "What is Lemon Thai?" },
@@ -308,7 +345,7 @@ var wellesley_round2 = {
 	}
 };
 
-var general_round1 = { 
+general_round1 = { 
 	'Science': {
 		'1': {	'q': "In the not fully understood Mpemba Effect, hot water sometimes does this faster than cold.",
 				'a': "What is freeze?" },
@@ -383,7 +420,7 @@ var general_round1 = {
 	}
 };
 
-var general_round2 = { 
+general_round2 = { 
 	'Anatomy': {
 		'1': {	'q': "The roof of the mouth is made up of hard & soft ones that are covered by mucous membranes.",
 				'a': "What are palates?" },
@@ -465,7 +502,7 @@ var general_round2 = {
 	}
 };
 
-var general_round3 = { 
+general_round3 = { 
 	'Pronoun': {
 		'1': {	'q': "4-letter word following &quot;watch&quot; or &quot;now hear&quot;; it's just about the most important word " +
 						"we use in &quot;Jeopardy!&quot; clues",
