@@ -3,7 +3,7 @@ Scores = new Mongo.Collection("scores");
 Times = new Mongo.Collection("times");
 Blocked = new Mongo.Collection("blocked");
 if (Blocked.find().count()==0) {
-	Blocked.insert(blocked: true);
+	Blocked.insert({blocked: true});
 }
 
 if (Meteor.isClient) {
@@ -28,12 +28,12 @@ if (Meteor.isClient) {
 
 	b = function() {
 		var b = Blocked.findOne();
-		Blocked.update(b._id, true);
+		Blocked.update(b._id, {blocked: true});
 	}
 
 	unb = function() {
 		ar b = Blocked.findOne();
-		Blocked.update(b._id, false);
+		Blocked.update(b._id, {blocked: false});
 	}
 
 	reset= function() { //reset time
@@ -149,7 +149,7 @@ if (Meteor.isClient) {
 
 	Template.button.events({
 		"click #button": function(){
-			if (Blocked.findOne()) {
+			if (Blocked.findOne().blocked) {
 				if (Times.find().count()==0){
 					Times.insert({
 						player:Meteor.user().emails[0].address,
