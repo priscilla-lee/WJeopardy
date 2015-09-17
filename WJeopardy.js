@@ -1,6 +1,7 @@
 Questions = new Mongo.Collection("questions");
 Scores = new Mongo.Collection("scores");
 Times = new Mongo.Collection("times");
+blocked = true;
 
 if (Meteor.isClient) {
 	
@@ -20,6 +21,14 @@ if (Meteor.isClient) {
 	pts = function(plyr, pts) { //updatepts
 		var player = Scores.findOne({player: plyr});
 		Scores.update(player._id, {$inc: {score: pts}});
+	}
+
+	b = function() {
+		blocked = true;
+	}
+
+	unb = function() {
+		blocked = false;
 	}
 
 	reset= function() { //reset time
@@ -135,12 +144,14 @@ if (Meteor.isClient) {
 
 	Template.button.events({
 		"click #button": function(){
-			if (Times.find().count()==0){
-				Times.insert({
-					player:Meteor.user().emails[0].address,
-					userId:Meteor.user()._id,
-					time:new Date().getTime()
-			})
+			if (!blocked) {
+				if (Times.find().count()==0){
+					Times.insert({
+						player:Meteor.user().emails[0].address,
+						userId:Meteor.user()._id,
+						time:new Date().getTime()
+					})
+				}
 			}
 		}
 	})
