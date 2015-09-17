@@ -32,7 +32,7 @@ if (Meteor.isClient) {
 	}
 
 	unb = function() {
-		ar b = Blocked.findOne();
+		var b = Blocked.findOne();
 		Blocked.update(b._id, {blocked: false});
 	}
 
