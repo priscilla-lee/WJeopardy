@@ -2,11 +2,10 @@ Questions = new Mongo.Collection("questions");
 Scores = new Mongo.Collection("scores");
 Times = new Mongo.Collection("times");
 Blocked = new Mongo.Collection("blocked");
-if (Blocked.find().count()==0) {
-	Blocked.insert({blocked: true});
-}
+Red = new Mongo.Collection("red");
 
 if (Meteor.isClient) {
+    
 	
 	function fastest() {
             var time = 10000000000000000000000000000000000;
@@ -20,6 +19,15 @@ if (Meteor.isClient) {
 			//console.log(player);
 			return player;
 	}
+    
+    red=function(p) {
+        var r= Red.findOne({player:p});
+        Red.update(r._id,{player:p,red:true});
+    }
+    unRed=function(p) {
+        var r= Red.findOne({player:p});
+        Red.update(r._id,{player:p,red:false});
+    }
 
 	pts = function(plyr, pts) { //updatepts
 		var player = Scores.findOne({player: plyr});
@@ -66,8 +74,9 @@ if (Meteor.isClient) {
 
 	create = function(boardName) { //create board
 		var categories = []
+        var board=Questions.findOne({name:boardName}).questions;
 
-		for (var key in boardName) {
+		for (var key in board) {
 	        categories.push(key);
 		}
 
@@ -77,7 +86,7 @@ if (Meteor.isClient) {
 			var ID = $(this).attr("id");
 			var category = ID.split("_")[0];
 			var itemNr = ID.split("_")[1];
-			var qa = boardName[category][itemNr];
+			var qa = board[category][itemNr];
 			//$("#overlay, #infobox").removeClass("hidden");
 			$("#infobox").removeClass("hidden");
 			$("#infobox #question").html(qa['q']);
@@ -120,6 +129,9 @@ if (Meteor.isClient) {
 		p1fastest: function() { return (fastest() == "player1@wellesley.edu");}, 
 		p2fastest: function() { return (fastest() == "player2@wellesley.edu");}, 
 		p3fastest: function() { return (fastest() == "player3@wellesley.edu");},
+        p1red: function() { return Red.findOne({player:1}).red;}, 
+		p2red: function() { return Red.findOne({player:2}).red;}, 
+		p3red: function() { return Red.findOne({player:3}).red;},
 		negative1: function() {return (Scores.findOne({player: "p1"}).score < 0);},
 		negative2: function() {return (Scores.findOne({player: "p2"}).score < 0);},
 		negative3: function() {return (Scores.findOne({player: "p3"}).score < 0);},
@@ -149,7 +161,7 @@ if (Meteor.isClient) {
 
 	Template.button.events({
 		"click #button": function(){
-			if (Blocked.findOne().blocked) {
+			if (!Blocked.findOne().blocked) {
 				if (Times.find().count()==0){
 					Times.insert({
 						player:Meteor.user().emails[0].address,
@@ -179,6 +191,15 @@ if (Meteor.isClient) {
     
     
 if (Meteor.isServer) {
+    if (Red.find().count()==0) {
+        Red.insert({player:1,red:false});
+        Red.insert({player:2,red:false});
+        Red.insert({player:3,red:false});
+    }
+    if (Blocked.find().count()==0) {
+	Blocked.insert({blocked: true});
+}
+
 	
 	if (Scores.find().count() == 0) {
 		console.log("inserting new scores");
@@ -199,15 +220,9 @@ if (Meteor.isServer) {
 	// 		Times.remove({"_id": Times.findOne()._id});
 	// 	}
 	// });
-	
-	
-}
+	if (Questions.find().count() == 0) {
 
-/**QUESTIONS**/
-
-if (Questions.find().count() == 0) {
-
-Questions.insert(w1: {
+Questions.insert({name:"w1",questions: {
 	"History":{
         "1":{"q": "Wellesley College was officially founded in this year.",
              "a": "What is 1870?"},
@@ -284,7 +299,7 @@ Questions.insert(w1: {
              "a": "What is the Legenda?"
             }
     }
-});
+}});
 
 
 
@@ -365,7 +380,7 @@ Questions.insert(w1: {
 // 	}
 // };
 
-Questions.insert(g1: { 
+Questions.insert({name:"g1",questions: { 
 	'Science': {
 		'1': {	'q': "In the not fully understood Mpemba Effect, hot water sometimes does this faster than cold.",
 				'a': "What is freeze?" },
@@ -438,7 +453,7 @@ Questions.insert(g1: {
 		'5': {	'q': "Myrtle or absinthe.",
 				'a': "What is green?" }
 	}
-});
+}});
 
 // general_round2 = { 
 // 	'Anatomy': {
@@ -608,3 +623,8 @@ Questions.insert(g1: {
 // 	}
 // };
 }
+	
+}
+
+/**QUESTIONS**/
+
