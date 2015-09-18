@@ -79,6 +79,13 @@ if (Meteor.isClient) {
 			rowEl.appendTo("#board");    
 		}   
 	}
+    
+    displayNames=function(n1,n2,n3){
+        $(".pl")[0].innerHTML=n1;
+        $(".pl")[1].innerHTML=n2;
+        $(".pl")[2].innerHTML=n3;
+    }
+        
 
 	function fastest(p) {
         var time = 10000000000000000000000000000000000;
