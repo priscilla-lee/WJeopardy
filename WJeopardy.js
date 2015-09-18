@@ -327,7 +327,7 @@ if (Meteor.isServer) {
 				'5': {	'q': "Myrtle or absinthe.",
 						'a': "What is green?" }
 			}
-		}});
+		});
 
 		Rounds.insert({name:"c", p1: "Julia", p2: "---", p3: "---". questions: { 
 			'Wellesley Acronyms': {
