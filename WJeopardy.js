@@ -15,11 +15,6 @@ if (Meteor.isClient) {
         Red.update(r._id,{player:p,red:false});
     }
 
-	pts = function(p, pts) { //updatepts
-		var player = Scores.findOne({player: p});
-		Scores.update(player._id, {$inc: {score: pts}});
-	}
-
 	b = function() { //block
 		var b = Blocked.findOne();
 		Blocked.update(b._id, {blocked: true});
@@ -30,7 +25,16 @@ if (Meteor.isClient) {
 		Blocked.update(b._id, {blocked: false});
 	}
 
-	reset = function() { //reset time
+	pts = function(p, pts) { //updatepts
+		var player = Scores.findOne({player: p});
+		Scores.update(player._id, {$inc: {score: pts}});
+	}
+
+	reset = function() { //reset 
+		times(); b(); unr(1); unr(2); unr(3);
+	}
+
+	times = function() { //reset time
 		Times.remove({"_id": Times.findOne()._id});
 	}
 
@@ -40,6 +44,7 @@ if (Meteor.isClient) {
 		for (var key in board) {categories.push(key);}
 
 		displayBoard(6, categories.length, categories);	
+		displayNames(board.p1, board.p2, board.p3);
 
 		$("#board td").click(function(){
 			var ID = $(this).attr("id");
@@ -80,14 +85,13 @@ if (Meteor.isClient) {
 		}   
 	}
     
-    displayNames=function(n1,n2,n3){
+    displayNames = function(n1,n2,n3){
         $(".pl")[0].innerHTML=n1;
         $(".pl")[1].innerHTML=n2;
         $(".pl")[2].innerHTML=n3;
     }
-        
 
-	function fastest(p) {
+	fastest = function(p) {
         var time = 10000000000000000000000000000000000;
         var player;
 		for(var i in Times.find().fetch()){
@@ -131,9 +135,9 @@ if (Meteor.isClient) {
         p1red: function() { return Red.findOne({player:1}).red;}, 
 		p2red: function() { return Red.findOne({player:2}).red;}, 
 		p3red: function() { return Red.findOne({player:3}).red;},
-		negative1: function() {return (Scores.findOne({player: 1}).score < 0);},
-		negative2: function() {return (Scores.findOne({player: 2}).score < 0);},
-		negative3: function() {return (Scores.findOne({player: 3}).score < 0);},
+		neg1: function() {return (Scores.findOne({player: 1}).score < 0);},
+		neg2: function() {return (Scores.findOne({player: 2}).score < 0);},
+		neg3: function() {return (Scores.findOne({player: 3}).score < 0);},
 	})
 
 	Template.button.events({
@@ -333,8 +337,8 @@ if (Meteor.isServer) {
 						'a': "What are  blue and grey?" },
 				'5': {	'q': "Myrtle or absinthe.",
 						'a': "What is green?" }
-			}
-		});
+		    }
+		}});
 
 		Rounds.insert({name:"c", p1: "Julia", p2: "---", p3: "---". questions: { 
 			'Wellesley Acronyms': {
