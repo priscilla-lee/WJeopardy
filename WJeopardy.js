@@ -35,13 +35,16 @@ if (Meteor.isClient) {
 	}
 
 	times = function() { //reset time
-		Times.remove({"_id": Times.findOne()._id});
+		while (Times.find().count() > 0) {
+			Times.remove({"_id": Times.findOne()._id});
+		}
 	}
 
 	create = function(b) { //create board
-        var board = Rounds.findOne({name:b}).questions;
+        var board = Rounds.findOne({name:b});
+        var qs = board.questions;
         var categories = [];
-		for (var key in board) {categories.push(key);}
+		for (var key in qs) {categories.push(key);}
 
 		displayBoard(6, categories.length, categories);	
 		displayNames(board.p1, board.p2, board.p3);
@@ -50,7 +53,7 @@ if (Meteor.isClient) {
 			var ID = $(this).attr("id");
 			var category = ID.split("_")[0];
 			var itemNr = ID.split("_")[1];
-			var qa = board[category][itemNr];
+			var qa = qs[category][itemNr];
 			$("#infobox").removeClass("hidden");
 			$("#infobox #question").html(qa['q']);
 			$(this).addClass("completed");
@@ -169,6 +172,16 @@ if (Meteor.isClient) {
 }   
     
 if (Meteor.isServer) {
+
+// var wQuestions = 
+
+// var gQuestions = ;
+
+
+// var cQuestions = ;
+
+
+
     if (Red.find().count()==0) {
         Red.insert({player:1,red:false});
         Red.insert({player:2,red:false});
@@ -187,85 +200,84 @@ if (Meteor.isServer) {
 
 	if (Rounds.find().count() == 0) {
 		Rounds.insert({name:"w", p1: "Gwen", p2: "Kelsey", p3: "Sally", questions: {
-			"RoundsHistory":{
-		        "1":{"q": "Wellesley College was officially founded in this year.",
-		             "a": "What is 1870?"},
-		        "2":{"q": "Wellesley’s Latin motto: Non _____ sed ______.",
-		             "a": "What are ministrari and ministrare?"},
-		        "3":{"q": "She was the first president of Wellesley.",
-		             "a": "Who was Ada Howard?"},
-		        "4":{"q": "This was the original name of Wellesley College.",
-		             "a": "What is Wellesley Female Seminary?"},
-		        "5":{"q": "This large building was destroyed by a fire in 1914.",
-		             "a": "What is College Hall?"}
-		    },
-		    "Women’s Colleges":{
-		        "1":{"q": "This is the only historical “7 sisters” college in Pennsylvania.",
-		             "a": "What is Bryn Mawr?"},
-		        "2":{"q": "This famous author and noted feminist graduated from Smith College in 1942.",
-		             "a": "Who is Betty Friedan?"},
-		        "3":{"q": "These are the 2 “7 Sisters” colleges that are no longer women’s colleges.",
-		             "a": "What are Radcliffe and Vassar?"},
-		        "4":{"q": "30% of women in this U.S. branch of government attended a women’s college.",
-		             "a": "What is Congress?"},
-		        "5":{"q": "In 1990, trustees of this women’s college decided to allow men, until strikes, boycotts, and protesting reversed their decision.",
-		             "a": "What is Mills College?"}
-		    },
-		    "Campus":{
-		        "1":{"q": "This specialty residence hall has the smallest square footage.",
-		             "a": "What is Simpson (West)?"},
-		        "2":{"q": "The guild of carillonneurs play music in this campus structure.",
-		             "a": "What is Galen Stone tower?"},
-		        "3":{"q": "This group of buildings stands where College Hall used to be.",
-		             "a": "What is Tower Court (Complex)?"},
-		        "4":{"q": "The Davis Museum and Cultural Center opened in this year.",
-		             "a": "What is 1993?"},
-		        "5":{"q": "This residence hall honors the composer of &quot;America the Beautiful.&quot;",
-		             "a": "What is Bates?"},
-		    },
-		    "Alumnae":{
-		        "1":{"q": "This ‘62 alum was a screenwriter, known for &quotWhen Harry met Sally&quot; and &quot;Sleepless in Seattle.&quot;",
-		             "a": "Who is Nora Ephron?"},
-		        "2":{"q": "This 1914 graduate is known under the pen name Carolyn Keene.",
-		             "a": "Who is Harriet Stratemeyer Adams?"},
-		        "3":{"q": "This ‘83 alum is a former astronaut and NASA Space Shuttle pilot and commander, and currently serves on the " +
+			"History":{
+			    "1":{"q": "Wellesley College was officially founded in this year.",
+			         "a": "What is 1870?"},
+			    "2":{"q": "Wellesley’s Latin motto: Non _____ sed ______.",
+			         "a": "What are ministrari and ministrare?"},
+			    "3":{"q": "She was the first president of Wellesley.",
+			         "a": "Who was Ada Howard?"},
+			    "4":{"q": "This was the original name of Wellesley College.",
+			         "a": "What is Wellesley Female Seminary?"},
+			    "5":{"q": "This large building was destroyed by a fire in 1914.",
+			         "a": "What is College Hall?"}
+			},
+			"Women’s Colleges":{
+			    "1":{"q": "This is the only historical “7 sisters” college in Pennsylvania.",
+			         "a": "What is Bryn Mawr?"},
+			    "2":{"q": "This famous author and noted feminist graduated from Smith College in 1942.",
+			         "a": "Who is Betty Friedan?"},
+			    "3":{"q": "These are the 2 “7 Sisters” colleges that are no longer women’s colleges.",
+			         "a": "What are Radcliffe and Vassar?"},
+			    "4":{"q": "30% of women in this U.S. branch of government attended a women’s college.",
+			         "a": "What is Congress?"},
+			    "5":{"q": "In 1990, trustees of this women’s college decided to allow men, until strikes, boycotts, and protesting reversed their decision.",
+			         "a": "What is Mills College?"}
+			},
+			"Campus":{
+			    "1":{"q": "This specialty residence hall has the smallest square footage.",
+			         "a": "What is Simpson (West)?"},
+			    "2":{"q": "The guild of carillonneurs play music in this campus structure.",
+			         "a": "What is Galen Stone tower?"},
+			    "3":{"q": "This group of buildings stands where College Hall used to be.",
+			         "a": "What is Tower Court (Complex)?"},
+			    "4":{"q": "The Davis Museum and Cultural Center opened in this year.",
+			         "a": "What is 1993?"},
+			    "5":{"q": "This residence hall honors the composer of &quot;America the Beautiful.&quot;",
+			         "a": "What is Bates?"}
+			},
+			"Alumnae":{
+			    "1":{"q": "This ‘62 alum was a screenwriter, known for &quotWhen Harry met Sally&quot; and &quot;Sleepless in Seattle.&quot;",
+			         "a": "Who is Nora Ephron?"},
+			    "2":{"q": "This 1914 graduate is known under the pen name Carolyn Keene.",
+			         "a": "Who is Harriet Stratemeyer Adams?"},
+			    "3":{"q": "This ‘83 alum is a former astronaut and NASA Space Shuttle pilot and commander, and currently serves on the " +
 							"Wellesley College Board of Trustees.",
-		             "a": "Who is Pamela Melroy?"},
-		        "4":{"q": "This CNBC host and anchor was named one of the &quot;100 Most Influential Hispanic Women in America,&quot; and " +
+			         "a": "Who is Pamela Melroy?"},
+			    "4":{"q": "This CNBC host and anchor was named one of the &quot;100 Most Influential Hispanic Women in America,&quot; and " +
 							"graduated from Wellesley in 1991.",
-		             "a": "Who is Michelle Caruso-Cabrera?"},
-		        "5":{"q": "This alum is a Jeopardy! champion and has the show's second-longest winning streak and the longest female winning streak.",
-		             "a": "Who is Julia Collins?"}
-		    },
-		    "Faculty":{
-		        "1":{"q": "This Poli-Sci professor was a chairman of the Fulbright and a mentor to Hillary Clinton during her Wellesley years.",
-		             "a": "Who is Alan Schechter?"},
-		        "2":{"q": "The associate director of Wellesley’s Center for Women and a women’s studies scholar, her works sparked the &quot;check " +
+			         "a": "Who is Michelle Caruso-Cabrera?"},
+			    "5":{"q": "This alum is a Jeopardy! champion and has the show's second-longest winning streak and the longest female winning streak.",
+			         "a": "Who is Julia Collins?"}
+			},
+			"Faculty":{
+			    "1":{"q": "This Poli-Sci professor was a chairman of the Fulbright and a mentor to Hillary Clinton during her Wellesley years.",
+			         "a": "Who is Alan Schechter?"},
+			    "2":{"q": "The associate director of Wellesley’s Center for Women and a women’s studies scholar, her works sparked the &quot;check " +
 							"your privilege&quot; movement.",
-		             "a": "Who is Peggy McIntosh?"},
-		        "3":{"q": "This prize is awarded to 3 professors at commencement every year.",
-		             "a": "What is the Pinanski (Teaching) Prize?"},
-		        "4":{"q": "This Wellesley English professor and poet was nominated for a Pulitzer Prize.",
-		             "a": "Who is Frank Bidart?"},
-		        "5":{"q": "This Professor of Economics Emeritus has done ground-breaking research in real estate, housing, and public finance.",
-		             "a": "Who is Chip Case?"}
-		    },
-		    "Student Life":{
-		        "1":{"q": "One of the “things to do before you graduate” prompts students to run naked across this outdoor location.",
-		             "a": "What is Severance Green?"},
-		        "2":{"q": "Wellesley students hold signs prompting athletes to kiss them during this annual event.",
-		             "a": "What is the Boston Marathon?"},
-		        "3":{"q": "This society was founded by Henry Durant and remains the oldest society still active on campus.",
-		             "a": "What is the Shakespeare society?"},
-		        "4":{"q": "This loud tradition takes place the night before final exams.",
-		             "a": "What is the primal scream?"},
-		        "5":{"q": "This is the name of the Wellesley College yearbook.",
-		             "a": "What is the Legenda?"
-		            }
-		    }
+			         "a": "Who is Peggy McIntosh?"},
+			    "3":{"q": "This prize is awarded to 3 professors at commencement every year.",
+			         "a": "What is the Pinanski (Teaching) Prize?"},
+			    "4":{"q": "This Wellesley English professor and poet was nominated for a Pulitzer Prize.",
+			         "a": "Who is Frank Bidart?"},
+			    "5":{"q": "This Professor of Economics Emeritus has done ground-breaking research in real estate, housing, and public finance.",
+			         "a": "Who is Chip Case?"}
+			},
+			"Student Life":{
+			    "1":{"q": "One of the “things to do before you graduate” prompts students to run naked across this outdoor location.",
+			         "a": "What is Severance Green?"},
+			    "2":{"q": "Wellesley students hold signs prompting athletes to kiss them during this annual event.",
+			         "a": "What is the Boston Marathon?"},
+			    "3":{"q": "This society was founded by Henry Durant and remains the oldest society still active on campus.",
+			         "a": "What is the Shakespeare society?"},
+			    "4":{"q": "This loud tradition takes place the night before final exams.",
+			         "a": "What is the primal scream?"},
+			    "5":{"q": "This is the name of the Wellesley College yearbook.",
+			         "a": "What is the Legenda?"}
+			}
 		}});
 
-		Rounds.insert({name:"g", p1: "Melissa", p2: "Ann", p3: "Kelly", questions: { 
+		Rounds.insert({name:"g", p1: "Melissa", p2: "Ann", p3: "Kelly", questions: {
 			'Science': {
 				'1': {	'q': "In the not fully understood Mpemba Effect, hot water sometimes does this faster than cold.",
 						'a': "What is freeze?" },
@@ -339,8 +351,7 @@ if (Meteor.isServer) {
 						'a': "What is green?" }
 		    }
 		}});
-
-		Rounds.insert({name:"c", p1: "Julia", p2: "---", p3: "---". questions: { 
+		Rounds.insert({name:"c", p1: "Julia", p2: "---", p3: "---", questions: {
 			'Wellesley Acronyms': {
 				'1': {	'q': "ARB.",
 						'a': "What is Academic Review Board?" },
@@ -390,17 +401,17 @@ if (Meteor.isServer) {
 				'5': {	'q': "Woolly but not so mammoth, I'm a cria, the young of this South American animal, Lama pacos",
 						'a': "What is an alpaca?" }
 			},
-			'Admissions and Financial Aid': {
-				'1': {	'q': "Wellesley has eliminated loans for families making under this dollar amount",
-						'a': "What is $60,000?" },
-				'2': {	'q': "As of 2013, this is Wellesley’s acceptance rate.",
-						'a': "What is 29%? (also accept 28% due to rounding)." },
-				'3': {	'q': "This tuition estimator was recently praised in the NYT for its simplicity and accuracy.",
-						'a': "What is my inTuition?" },
-				'4': {	'q': "Wellesley meets this percentage of demonstrated financial need.",
-						'a': "What is 100%?" },
-				'5': {	'q': "This is the name of Wellesley’s admissions policy with regards to financial aid.",
-						'a': "What is need-blind?" }
+			'Town of Wellesley': {
+				'1': {	'q': "This citrus-named restaurant (thankfully) delivers to Wellesley college.",
+						'a': "What is Lemon Thai?" },
+				'2': {	'q': "This ice-cream place is a Wellesley favorite.",
+						'a': "What is J.P Licks?" },
+				'3': {	'q': "In addition to Wellesley, Babson, and Olin, this college campus is also in the city of Wellesley.",
+						'a': "What is Massachusetts Bay Community College? (Mass Bay)" },
+				'4': {	'q': "The town of Wellesley was once a part of this nearby city.",
+						'a': "What is Needham?" },
+				'5': {	'q': "This author and poet resided in Wellesley as a child, but later attended Smith College.",
+						'a': "Who is Sylvia Plath?" }
 			},
 			'Languages': {
 				'1': {	'q': "Ethiopia's official language, Amharic, is the world's second most-widely spoken Semitic language; this is first",
@@ -413,7 +424,7 @@ if (Meteor.isServer) {
 						'a': "What is Maori?" },
 				'5': {	'q': "The founder of a school for the deaf, he developed American sign language from a French version",
 						'a': "Who is (Thomas) Gallaudet?" }
-			},
-		};
+			}
+		}});
 	}
 }

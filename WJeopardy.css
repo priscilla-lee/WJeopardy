@@ -152,6 +152,6 @@ br#clear{
     top: 50%;
     margin: auto auto;
     margin-top: 10vh;
-    width: 70%;
-    height: 70vh;
+    width: 95%;
+    height: auto;
 }
