@@ -40,6 +40,11 @@ if (Meteor.isClient) {
 		}
 	}
 
+	loadNames = function(n2, n3) {
+		var c = Rounds.findOne({name: "c"});
+		Rounds.update(c._id, {$set: {p2: n2, p3: n3}});
+	}
+
 	create = function(b) { //create board
         var board = Rounds.findOne({name:b});
         var qs = board.questions;
@@ -49,6 +54,7 @@ if (Meteor.isClient) {
 		displayBoard(6, categories.length, categories);	
 		displayNames(board.p1, board.p2, board.p3);
 
+		//when you click a box on the jeopardy board
 		$("#board td").click(function(){
 			var ID = $(this).attr("id");
 			var category = ID.split("_")[0];
@@ -57,11 +63,18 @@ if (Meteor.isClient) {
 			$("#infobox").removeClass("hidden");
 			$("#infobox #question").html(qa['q']);
 			$(this).addClass("completed");
+			reset(); //resets times, blocks all buzzers, unreds all "incorrect" answers
 		});
 
 		 $("#close").click(function(){
 			$("#overlay, #infobox").addClass("hidden");
 		 });
+
+		 //resets all player scores to 0
+		 for (var i = 0; i < 3; i++) {
+		 	var s = Scores.findOne({player: i});
+		 	Scores.update(s._id, {$set: {score: 0}});
+		 }
 	}
 
 	displayBoard = function(height, width, labels) { 
