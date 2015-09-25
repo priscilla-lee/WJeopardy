@@ -3,6 +3,9 @@
 </head>
 
 <body>
+{{#if thankYou}}
+    <img id="thankYou" src="http://cs.wellesley.edu/~plee3/jeopardy/jeopardythankyou.jpg">
+{{else}}
 	<div id="login">{{> loginButtons}}</div>
 	{{#if currentUser}}	
 		{{#if prisOrElla}}
@@ -11,11 +14,12 @@
 			{{> button}}	
 		{{/if}}	
 	{{/if}}
+{{/if}}
 </body>
 
 <template name="board">
     <div id="mainDiv"> 
-		<img id="background" src="http://cs.wellesley.edu/~plee3/jeopardy/jeopardyboard.png">
+        <img id="background" src="http://cs.wellesley.edu/~plee3/jeopardy/jeopardyboard.png">
 		<div id="display">
 			<table id="board">
 				{{#each rows}}

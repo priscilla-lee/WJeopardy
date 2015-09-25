@@ -3,8 +3,14 @@ Scores = new Mongo.Collection("scores");
 Times = new Mongo.Collection("times");
 Blocked = new Mongo.Collection("blocked");
 Red = new Mongo.Collection("red");
+Thank = new Mongo.Collection("thank");
 
 if (Meteor.isClient) {
+    ty = function(){
+        var t=Thank.findOne();
+        Thank.update(t._id, {ty: !t.ty});
+    }
+    
     r = function(p) { //red
         var r= Red.findOne({player:p});
         Red.update(r._id,{player:p,red:true});
@@ -63,12 +69,13 @@ if (Meteor.isClient) {
 			$("#infobox").removeClass("hidden");
 			$("#infobox #question").html(qa['q']);
 			$(this).addClass("completed");
-			reset(); //resets times, blocks all buzzers, unreds all "incorrect" answers
 		});
 
 		 $("#infobox").click(function(){
 		 	//$("#close").click(function(){
 			$("#overlay, #infobox").addClass("hidden");
+            reset(); //resets times, blocks all buzzers, unreds all "incorrect" answers
+
 		 });
 
 		 //resets all player scores to 0
@@ -120,6 +127,9 @@ if (Meteor.isClient) {
 	}
 
 	Template.body.helpers({
+        thankYou: function(){
+            return Thank.findOne().ty;
+        },
 		prisOrElla: function() {
 			if (Meteor.user()) {
 				var pris = (Meteor.user().username == "plee3");
@@ -440,4 +450,8 @@ if (Meteor.isServer) {
 		Rounds.insert({name:"g", p1: "Melissa", p2: "Ann", p3: "Kelly", questions: gQuestions});
 		Rounds.insert({name:"c", p1: "Julia", p2: "---", p3: "---", questions: cQuestions});
 	}
+    
+    if (Thank.find().count() == 0) {
+        Thank.insert({ty: false});
+    }
 }
