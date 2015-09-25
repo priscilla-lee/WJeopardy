@@ -23,7 +23,7 @@
 				{{/each}}
 			</table>
 			<div id="infobox" class="hidden">
-				<p id="close">X</p>
+				<!--<p id="close">X</p>-->
 				<br id="clear">
 				<p id="question"></p>
 			</div>
@@ -39,86 +39,6 @@
 			<tr><td style="color:{{#if neg3}}red !important{{/if}}">{{score3}}</td></tr>
 		</table>
 	</div>
-</template>
-
-<template name="row">
-	<p> this.score </p>
-
-
-
-
-var table = document.getElementById("board");
-		table.innerHTML = '';
-
-		for (var row=0; row<height; row=row+1) {
-			var rowEl = $("<tr>");
-			if (row === 0){
-				for (var idx in labels){
-					$("<th>").attr({class: 'header'})
-							 .text(labels[idx])
-							 .appendTo(rowEl); 
-				}
-			} else {
-				for (var col=0; col<width; col=col+1) {
-					$("<td>").attr({class: labels[col], 
-									id: labels[col]+"_"+row})
-							 .text("$"+row*100)
-							 .appendTo(rowEl);          
-				}
-			}
-			rowEl.appendTo("#board");    
-		}   
-
-
-
-
-		create = function(b) { //create board
-        var board = Rounds.findOne({name:b});
-        var qs = board.questions;
-        var categories = [];
-		for (var key in qs) {categories.push(key);}
-
-		displayBoard(6, categories.length, categories);	
-		displayNames(board.p1, board.p2, board.p3);
-
-		$("#board td").click(function(){
-			var ID = $(this).attr("id");
-			var category = ID.split("_")[0];
-			var itemNr = ID.split("_")[1];
-			var qa = qs[category][itemNr];
-			$("#infobox").removeClass("hidden");
-			$("#infobox #question").html(qa['q']);
-			$(this).addClass("completed");
-		});
-
-		 $("#close").click(function(){
-			$("#overlay, #infobox").addClass("hidden");
-		 });
-	}
-
-	displayBoard = function(height, width, labels) { 
-		var table = document.getElementById("board");
-		table.innerHTML = '';
-
-		for (var row=0; row<height; row=row+1) {
-			var rowEl = $("<tr>");
-			if (row === 0){
-				for (var idx in labels){
-					$("<th>").attr({class: 'header'})
-							 .text(labels[idx])
-							 .appendTo(rowEl); 
-				}
-			} else {
-				for (var col=0; col<width; col=col+1) {
-					$("<td>").attr({class: labels[col], 
-									id: labels[col]+"_"+row})
-							 .text("$"+row*100)
-							 .appendTo(rowEl);          
-				}
-			}
-			rowEl.appendTo("#board");    
-		}   
-	}
 </template>
 
 <template name="button">
