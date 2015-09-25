@@ -66,7 +66,8 @@ if (Meteor.isClient) {
 			reset(); //resets times, blocks all buzzers, unreds all "incorrect" answers
 		});
 
-		 $("#close").click(function(){
+		 $("#infobox").click(function(){
+		 	//$("#close").click(function(){
 			$("#overlay, #infobox").addClass("hidden");
 		 });
 
